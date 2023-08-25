@@ -12,22 +12,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Mino.VideoToSketch.ViewModels;
 
 namespace Mino.VideoToSketch.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Wpf.Ui.Controls.UiWindow // FluentWindow
     {
         public MainWindow()
         {
             InitializeComponent();
 
             Wpf.Ui.Appearance.Theme.Apply(
-           Wpf.Ui.Appearance.ThemeType.Dark,     // Theme type
-           Wpf.Ui.Appearance.BackgroundType.Mica, // Background type
-           true);
+                Wpf.Ui.Appearance.ThemeType.Dark,     // Theme type
+                Wpf.Ui.Appearance.BackgroundType.Mica, // Background type
+                true);
+
+            this.DataContext = new MainViewModel();
 
             this.Loaded += (sender, args) =>
             {
@@ -36,6 +39,14 @@ namespace Mino.VideoToSketch.Views
                     Wpf.Ui.Appearance.BackgroundType.Mica, // Background type
                     true                                   // Whether to change accents automatically
                 );
+            };
+
+            this.Closed += (sender, args) =>
+            {
+                if (this.DataContext is MainViewModel main)
+                {
+                    main.OnClosed();
+                }
             };
         }
     }
